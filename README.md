@@ -7,4 +7,4 @@ This script requires lame and flac to be installed and in the execution PATH.
 
 It currently does not convert any kind of metadata nor is the preset for lame changeable. It uses the preset medium which should result in varibale bitrate files with roughly 192kbit.
 
-The script fills the gap for me that I have my whole CD collection ripped to flac but most of may music devices, especially in the car, refuse to play this file format :(
+The script fills the gap for me that I have my whole CD collection ripped to flac but most of my music devices, especially in the car, refuse to play this file format :(
