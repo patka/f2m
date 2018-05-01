@@ -78,7 +78,7 @@ end
 ARGV << '-h' if ARGV.empty?
 
 options = {
-  :output_folder => "converted",
+  :output_folder => "converted"
 }
 
 OptionParser.new do |opts|
