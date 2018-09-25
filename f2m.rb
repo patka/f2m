@@ -24,11 +24,16 @@ class F2M
   def set_id3_tags(flac_file, mp3_file)
     flac_info = FlacInfo.new(flac_file)
     mp3_info = Mp3Info.open(mp3_file) do |mp3|
-      mp3.tag.artist = flac_info.tags['ARTIST']
-      mp3.tag.album = flac_info.tags['ALBUM']
-      mp3.tag.title = flac_info.tags['TITLE']
+      mp3.tag.artist = to_ascii flac_info.tags['ARTIST']
+      mp3.tag.album = to_ascii flac_info.tags['ALBUM']
+      mp3.tag.title = to_ascii flac_info.tags['TITLE']
       mp3.tag.tracknum = Integer(flac_info.tags['TRACKNUMBER'])
+      mp3.tag.year = Integer(flac_info.tags['DATE'])
     end
+  end
+
+  def to_ascii(text)
+    text.encode('ASCII', invalid: :replace, undef: :replace, replace: "_")
   end
 
   def convert_directory(path, current_dir = '')
@@ -61,7 +66,7 @@ class F2M
   end
 
   def mp3_command(mp3_file)
-    "lame --preset medium - #{mp3_file}"
+    "lame --preset #{@options[:lame_preset]} - #{mp3_file}"
   end
 
   def target_file(flac_file, target_folder)
@@ -78,13 +83,17 @@ end
 ARGV << '-h' if ARGV.empty?
 
 options = {
-  :output_folder => "converted"
+  :output_folder => "converted",
+  :lame_preset => "standard"
 }
 
 OptionParser.new do |opts|
   opts.banner = "Usage: f2m.rb [options] <source folder>"
   opts.on("-o", "--output [FOLDER]", String,  "Output folder. Default is 'converted'") do |o|
-    options[:output_folder] = o || 'converted'
+    options[:output_folder] = o
+  end
+  opts.on("-p", "--preset [LAME_PRESET]", String, "Preset that should be used for lame encoding. Default is standard.") do |pr|
+    options[:lame_preset] = pr
   end
 end.parse!
 
